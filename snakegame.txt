@@ -1,0 +1,58 @@
+import random  # Importing the random module to place food at random positions
+
+width = 10     # Width of the game board
+height = 10    # Height of the game board
+
+# Function to print the current state of the board
+def print_board(snake, food):
+    for y in range(height):
+        for x in range(width):
+            if [x, y] == food:           # If the current cell is the food
+                print('F', end=' ')
+            elif [x, y] in snake:        # If the current cell is occupied by the snake
+                print('S', end=' ')
+            else:                        # Otherwise, print an empty cell
+                print('.', end=' ')
+        print()  # New line after each row
+    print()      # Extra line for spacing after the board is printed
+
+# Function to move the snake based on direction input
+def move_snake(snake, direction):
+    head = snake[-1]  # The last element is the head of the snake
+
+    # Determine new head position based on direction
+    if direction == 'up':
+        new_head = [head[0], head[1] - 1]
+    elif direction == 'down':
+        new_head = [head[0], head[1] + 1]
+    elif direction == 'left':
+        new_head = [head[0] - 1, head[1]]
+    elif direction == 'right':
+        new_head = [head[0] + 1, head[1]]
+    else:
+        print("Invalid direction, use left/right/down/up.")
+        return snake, False  # Typo corrected: 'sanke' should be 'snake'
+
+    # Check if snake hits the wall
+    if new_head[0] < 0 or new_head[0] >= width or new_head[1] < 0 or new_head[1] >= height:
+        return snake, 'wall'
+
+    # Check if snake hits itself
+    if new_head in snake:
+        return snake, 'self'
+
+    snake.append(new_head)  # Add new head to the snake
+    return snake, new_head  # Return updated snake and result
+
+# Function to randomly place food not on the snake
+def place_food(snake):
+    while True:
+        x = random.randint(0, width - 1)
+        y = random.randint(0, height - 1)
+        if [x, y] not in snake:  # Ensure food does not appear on the snake
+            return [x, y]
+
+# Main function to run the snake game
+def snake_game():
+    snake = [[1, 1]]              # Starting position of the snake
+    food = place_food(snake)     # Place the
